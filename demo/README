@@ -1,0 +1,31 @@
+ABACUS-R currently consists of sequence design and mutation scanning two function, which could be used with following three steps:
+
+(1) We recommend users make a directory to design a batch of sequence, with four parts e.g. batchtest.txt, inference_input/, inference_output/, PDBfile/
+
+For batchtest.txt file, it tells the program design sequences based on which target. We recommend users write batchtest.txt in format like PDBNAME_CHAIN.
+WARNING: "_" is forbidden to occur in PDBNAME to avoid confusion of CHAIN.
+
+We recommend you store the PDB/mmCIF/mmCIF.gz file in the directory named PDBfile. If some specified sidechains are needed when designing the sequences, a file with
+name like PDBNAME_CHAIN_spfile could be created in PDBfile, whose format could refer to ../final_model/sequence_design.yaml. If user need to design sequence based on a
+given sequence, a fasta format file name-like PDBNAME_CHAIN_spseqs could be stored on PDBfile directory.
+NOTE: We recommend PDB file with full mainchain atoms. Besides, line with alternative sidechain are also recommended to be removed in PDB file.
+
+For inference_input directory, it plays the role of extract necessary information as input to model, which will be stored in inference_input directory.
+
+The inference_output directory is used for storing the output information
+
+(2) User could edit the content of ../final_model/sequence_design.yaml or ../final_model/multi_scan.yaml according to needs.
+NOTE: Notation of parameters for designing sequence or mutation scanniing could refer to corresponding file (../final_model/sequence_design.yaml or ../final_model/multi_scan.yaml)
+
+(3) After determining the parameters, user could run ../run.sh and check the output files in specified directory e.g. inference_output/
+
+
+After designing process, two ouput file will be returned (PDBNAME_CHAIN_suffix_seq_design.jsonl, PDBNAME_CHAIN_suffix_all_inf.jsonl).
+
+PDBNAME_CHAIN_suffix_seq_design.jsonl stores the information of designed sequences and its correpondding total logp, total entropy and total logits. Additionaly, logP and probabiility
+for each site are also stored. Correspondidng information for native sequence and identity between designed sequences and native sequence are also calculated.
+
+PDBNAME_CHAIN_suffix_all_inf.jsonl stores the information during designing process, including the evolution of sequence, identity between sequences in current step and sequence in the last step,
+identity between sequences in current step and native sequences, the process of updated entropy, process of total logp, process of total logits and confusion sites (not self-consistent).
+
+NOTE: Current version of ABACUS-R will not return a model with sidechain conformation, which could be achived by ABACUS2 or RosettaDesign for sidechain packing.

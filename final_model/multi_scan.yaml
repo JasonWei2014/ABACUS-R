@@ -1,0 +1,85 @@
+# Preprocess data
+preprocess_params:
+  # designed pdb list file
+  filename: "/home/liuyf/alldata/experiment/faon/batchtest.txt"
+
+  # pdbfile/sp_file/sp_seq root
+  pdbdataroot: "/home/liuyf/alldata/experiment/faon/PDBfile"
+
+  # filetype (PDB or mmCIF or gz)
+  datatype: "PDB"
+  # datatype: "mmCIF"
+  # datatype: "gz"
+
+  # inference step
+  inference: True
+
+  # inference input
+  outputroot: "/home/liuyf/alldata/experiment/faon/inference_input"
+
+  # consider other chain information when designing the sequences
+  otherchain: True
+
+# Dataset parameters
+dataset_params:
+  neighborhood_size: 20
+  use_normalize: True
+  use_rbf: True
+  use_trigonometric: False
+  old_features: True
+
+# Defines model architecture
+model_params:
+  transformer_params:
+     vocab_size: 20
+     n_output: 35
+     n_layer: 12
+     n_head: 8
+     n_embd: 256
+     n_spatial: 22
+     n_dihedral: 15
+
+# Parameters of training
+train_params:
+  num_epochs: 30
+  epoch_milestones: [12, 18]
+  lr: 2.0e-4
+  batch_size: 1024
+  checkpoint_freq: 1
+  loss_freq: 100
+  loss_weights:
+    loss_AA: 1
+    loss_bfactor: 0.2
+    loss_ss3: 0.2
+    loss_ss8: 0.2
+    loss_rsa: 0.2
+    loss_k1k2: 0.5
+
+# Parameters of Validating
+validate_params:
+  num_samples: 1000000
+
+# Parameters of Testing
+test_params:
+
+  # candidate mutation sites for pdbchain
+  # option: ALL, a list with mutation sites
+  # e.g. [1, 2, 3, 4, 5, 7, 9, 11, 13, 39, 40, 41, 42, 43, 44, 45, 46, 48, 60, 62, 64, 66, 68, 70, 71, 72, 73]
+  # e.g. ALL
+  allmutsites: [159, 160, 161, 162, 163, 164, 165, 166, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208]
+
+  # candidate number for combination
+  mutsites_num: 1
+
+  # iteration to self-consistent
+  # larger mutsites_num needs larger iter_num
+  iter_num: 5
+
+  # suffix for output file
+  suffix: "max_alpha"
+
+  # outputroot
+  outputroot: "/home/liuyf/alldata/experiment/faon/inference_output"
+
+  # verbose
+  verbose: True

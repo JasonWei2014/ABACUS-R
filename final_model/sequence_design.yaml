@@ -1,0 +1,141 @@
+# Preprocess data
+preprocess_params:
+  # designed pdb list file
+  filename: "/home/liuyf/alldata/ABACUS-R-pub/demo/batchtest.txt"
+
+  # pdbfile/sp_file/sp_seq root
+  pdbdataroot: "/home/liuyf/alldata/ABACUS-R-pub/demo/PDBfile"
+
+  # filetype (PDB or mmCIF or gz)
+  datatype: "PDB"
+  # datatype: "mmCIF"
+  # datatype: "gz"
+
+  # inference step
+  inference: True
+
+  # inference input
+  outputroot: "/home/liuyf/alldata/ABACUS-R-pub/demo/inference_input"
+
+  # consider sidechain type in other chain when designing the sequences
+  otherchain: True
+
+# Dataset parameters
+dataset_params:
+  neighborhood_size: 20
+  use_normalize: True
+  use_rbf: True
+  use_trigonometric: False
+  old_features: True
+
+# Defines model architecture
+model_params:
+  transformer_params:
+     vocab_size: 20
+     n_output: 35
+     n_layer: 12
+     n_head: 8
+     n_embd: 256
+     n_spatial: 22
+     n_dihedral: 15
+
+# Parameters of training
+train_params:
+  num_epochs: 30
+  epoch_milestones: [12, 18]
+  lr: 2.0e-4
+  batch_size: 1024
+  checkpoint_freq: 1
+  loss_freq: 100
+  loss_weights:
+    loss_AA: 1
+    loss_bfactor: 0.2
+    loss_ss3: 0.2
+    loss_ss8: 0.2
+    loss_rsa: 0.2
+    loss_k1k2: 0.5
+
+# Parameters of Validating
+validate_params:
+  num_samples: 1000000
+
+# Parameters of Testing
+test_params:
+
+  # alpha and max_sampling is used for control the diversity of sequence
+  # smaller alpha will leads to diverse sequences
+  # reference alpha value for average sequences identity (see supplementary figure 11):
+  # 0.8: 0.35, 1.0: 0.42, 1.2: 0.47, 1.5: 0.55, 2.0: 0.62, 2.5: 0.69, 3.5: 0.71, max: 0.8
+  max_sample: True
+  alpha: 1.8
+
+  # sp_aa is used for specifying sidechain type for specified sites when designing the sequences
+  # spfile should on the pdbdataroot directory
+  # if True, residue in spfile will be constrained; if False, all residue will be updated freely
+  # e.g. 1r26_A_spfile format:
+  # 1, A
+  # 2, A
+  sp_aa: False
+
+  # if True, sequence will be updated from random seqence
+  # if False, sequence will be updated from structure sequence or specified sequence
+  random_init: True
+
+   # if True, sequence will be updated from structure sequence
+  struct_init: False
+
+  # if True, sequence will be updated from specified sequence in fasta file, which should on the pdbdataroot directory
+  # e.g. 1r26_A_spseqs format
+  # >1r26_tmp
+  # AAAAAAAAAAAAAAAAAA
+  sp_seqinit: False
+
+  # max sample number
+  num_samples: 1000000
+
+  # number of designed sequences
+  num_epochs: 2
+
+  # number of total iteration (empirically, 1000 is enough)
+  num_iters: 1000
+
+  # iteration steps number when random mutation percentage equals lower boundary for random mutation
+  low_iter: 750
+
+  # lower boundary for random mutation percentage when iteration process larger than (num_iters - low_iter)
+  low: 0
+
+  # upper boundary for random mutation percentage
+  high: 30
+
+  # drop way of random mutation percentage from upper boundary to lower boundary
+  # two options: "exp" or "linear"
+  mutdecay: "linear"
+
+  # upper boundary for fraction of candidate residue for updation
+  part_mut: 80
+
+  # iteration steps number when number of candidate residue for updation equals to 1
+  low_keep: 600
+
+  # drop way for number of candidate residue from upper boundary to 1
+  # two options: "exp" or "linear"
+  stepdecay: "exp"
+
+  # save sequence in lowest -logp or save converge sequences in a run
+  savemaxlogp: False
+
+  # suffix for output file
+  suffix: "max_alpha"
+
+  # if designed seqeunce totally self-consistent, program will have a new run
+  early_stop: True
+
+  # outputroot
+  outputroot: "/home/liuyf/alldata/ABACUS-R-pub/demo/inference_output"
+
+  # if outout all_inf file
+  all_inf: False
+
+  # verbose
+  verbose: False
