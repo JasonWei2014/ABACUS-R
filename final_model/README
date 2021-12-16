@@ -1,2 +1,4 @@
 comparison_model1 is a pretrained model compared with 3DCNN model
 comparison_model2 is a pretrained model compared with autoregressive model
+
+If the pretrained model is needed, please contact lyf020419@mail.ustc.edu.cn
