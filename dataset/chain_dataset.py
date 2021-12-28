@@ -152,8 +152,6 @@ class ChainDataset(data.Dataset):
                     knn_inf["k_nnangle"] = self._angle_triangle(knn_inf["k_nnangle"])
                     knn_inf["k_nnsphere3d"] = self._angle_triangle(knn_inf["k_nnsphere3d"])
 
-                # knn_inf["k_nnangle"] = knn_inf["k_nnangle"] / np.expand_dims(
-                #     np.sqrt((knn_inf["k_nnangle"] ** 2).sum(1)), 1)
 
             else:
                 knn_inf = {
@@ -196,8 +194,6 @@ class ChainDataset(data.Dataset):
             all_cent_inf.append(cent_inf)
             all_knn_inf.append(knn_inf)
 
-            # if self.pred_k1k2:
-            #     all_k1k2.append(k1k2_entry["k_nndist"])
 
         chain_seq = np.array(all_seq)
         chain_cent_inf = {
@@ -209,10 +205,6 @@ class ChainDataset(data.Dataset):
             },
             "dist": np.array([cent_inf["dist"] for cent_inf in all_cent_inf])
         }
-
-        # if self.pred_k1k2:
-        #     chain_cent_inf["k1k2"] = np.array(all_k1k2, dtype=np.float32) / 180.0
-        #     chain_cent_inf["k1k2_mask"] = (chain_cent_inf["k1k2"] >= -1.0) & (chain_cent_inf["k1k2"] <= 1.0)
 
         chain_knn_inf = {}
         for key in list(all_knn_inf[0].keys()):
