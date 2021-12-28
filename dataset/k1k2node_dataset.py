@@ -50,9 +50,7 @@ class NodeDataset(data.Dataset):
         self.encodenum2AA = {x[1]: x[0] for x in ENCODEAA2NUM.items()}
 
         if protein_list is None:
-            protein_list = "/home/liuyf/alldata/trainset_1100.txt" if is_train else "/home/liuyf/alldata/independant_1100.txt"
-            # protein_list = "/home/liuyf/alldata/trainset_1100.txt" if is_train else "/home/liuyf/alldata/0805protein_test.txt"
-            # protein_list = "/home/liuyf/alldata/trainset_1100.txt" if is_train else "/home/liuyf/alldata/single_scan_numa.txt"
+            protein_list = "/home/liuyf/alldata/trainset.txt" if is_train else "/home/liuyf/alldata/test.txt"
 
         with open(protein_list, "r") as f:
             protein_list = f.readlines()
@@ -86,7 +84,7 @@ class NodeDataset(data.Dataset):
         dist_file = os.path.join(self.root_dir, self.basename, protein, "dist.jsonl")
         sphere3d_file = os.path.join(self.root_dir, self.basename, protein, "sphere3d.jsonl")
         allinternal_file = os.path.join(self.root_dir, self.basename, protein, "split_all_internal.jsonl")
-        k1k2_file = os.path.join("/home/liuyf/alldata/pdbname_k1k2", protein, "k1k2.jsonl")
+        k1k2_file = os.path.join(self.root_dir, self.basename, protein, "k1k2.jsonl")
 
         with open(node_file) as nodf:
             nodflines = nodf.readlines()
@@ -141,7 +139,6 @@ class NodeDataset(data.Dataset):
 
         if self.pred_k1k2:
             label["k1k2"] = np.array(k1k2_entry["k_nndist"], dtype=np.float32) / 180.0
-            # label["k1k2"] = np.array(k1k2_entry["feasible_k1k2"], dtype=np.float32) / 180.0
             label["k1k2_mask"] = (label["k1k2"] >= -1.0) & (label["k1k2"] <= 1.0)
 
         node_diherdral = {
@@ -193,7 +190,6 @@ class NodeDataset(data.Dataset):
                 knn_inf["k_nnangle"] = self._angle_triangle(knn_inf["k_nnangle"])
                 knn_inf["k_nnsphere3d"] = self._angle_triangle(knn_inf["k_nnsphere3d"])
 
-            # knn_inf["k_nnangle"] = knn_inf["k_nnangle"] / np.expand_dims(np.sqrt((knn_inf["k_nnangle"] ** 2).sum(1)), 1)
 
         else:
             knn_inf = {
